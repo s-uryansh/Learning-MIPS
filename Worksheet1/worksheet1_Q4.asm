@@ -1,5 +1,5 @@
 .data
-intVar: .word 25 #set value to check
+intVar: .word 10#set value to check
 flag: .word 0
 	
 .text
@@ -17,19 +17,26 @@ main:
 #not positive + not zero
 	li $t1, -1
 	sw $t1, flag
+	j print
 	li $v0, 10
 	syscall
 	
 is_Positive:
 	li $t1, 1 
 	sw $t1, flag
+	j print
 	li $v0, 10
 	syscall
 	
 is_Zero:
 	li $t1, 0
 	sw $t1, flag
+	j print
 	li $v0, 10
 	syscall
 	
 	
+print:
+	li $v0 ,1
+	lw $a0 ,flag
+	syscall
