@@ -3,6 +3,7 @@ num: .space 100
 fac: .space 100
 result: .asciiz "factorial: "
 console: .asciiz "num: "
+error: .asciiz "ERROR"
 
 .text
 
@@ -31,6 +32,7 @@ factorial:
 	lw $a0 ,0($t0)
 	li $t1 , 1
 	
+	blt $a0 , $zero , error_fac
 	beq $a0 , $t1 , fac_one
 	li $t1 , 0
 	beq $a0 , $t1 , fac_zero
@@ -59,7 +61,14 @@ fac_zero:
     la $t0, fac     
     sw $v0, 0($t0)
     jr $ra
-        	
+
+error_fac:
+    li $v0, 4
+    la $a0, error
+    syscall
+    li $v0, 10
+    syscall
+
 display:
    	li $v0, 4
     	la $a0, result
