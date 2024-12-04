@@ -3,7 +3,6 @@
 arr: .space 20
 str: .asciiz "enter size of arr: "
 str1: .asciiz "enter element : "
-max: .asciiz "max element is: "
 newline: .asciiz "\n"
 
 .text
@@ -25,7 +24,7 @@ get_arr:
   
     li $v0, 5
     syscall
-    move $s0, $v0               
+    move $s0, $v0     
     
     la $t0, arr                
     li $t1, 0 #counter = 0     
@@ -53,7 +52,7 @@ end:
 find_max:
     la $t0, arr            
     lw $t1, 0($t0)   
-    li $t2, 1 #counter = 1
+    li $t2, 0 #counter = 0
     
 loop1:
 #goes through whole array taking current element as max and comparing for bigger element
@@ -61,7 +60,7 @@ loop1:
     lw $t3, 0($t0)             
     blt $t1, $t3, updateMax  
     addi $t0, $t0, 4          
-    addi $t2, $t2, 1         
+    addi $t2, $t2, 1
     j loop1                   
     
 end1:
@@ -72,13 +71,7 @@ updateMax:
     move $t1, $t3       
     j loop1           
 
-display:
-   
-    li $v0, 4
-    la $a0, max
-    syscall
-    
-   
+display:  
     li $v0, 1
     move $a0, $s1
     syscall

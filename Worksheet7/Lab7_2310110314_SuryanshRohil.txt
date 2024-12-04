@@ -1,0 +1,79 @@
+Implement a 4 bit multiplier in HDL verilog, using full adders.
+===================================================================================================
+Testbench:
+{
+module test_multiplier_4bit;
+    reg [3:0] A;
+    reg [3:0] B;
+    wire [7:0] P;
+
+    // Instantiate the multiplier module
+    multiplier_4bit uut (
+        .A(A),
+        .B(B),
+        .P(P)
+    );
+
+    initial begin
+        // Test cases
+        A = 4'b1011; B = 4'b1110; // 11 * 14 = 154
+        #10;
+        $display("A = %b, B = %b, Product = %b (Decimal: %d)", A, B, P, P);
+
+        A = 4'b0101; B = 4'b0011; // 5 * 3 = 15
+        #10;
+        $display("A = %b, B = %b, Product = %b (Decimal: %d)", A, B, P, P);
+
+        A = 4'b1111; B = 4'b1111; // 15 * 15 = 225
+        #10;
+        $display("A = %b, B = %b, Product = %b (Decimal: %d)", A, B, P, P);
+
+        A = 4'b1001; B = 4'b0010; // 9 * 2 = 18
+        #10;
+        $display("A = %b, B = %b, Product = %b (Decimal: %d)", A, B, P, P);
+
+        $finish;
+    end
+endmodule
+}
+
+===================================================================================================
+Design:
+{
+module multiplier_4bit(
+    input [3:0] A, // 4-bit multiplicand
+    input [3:0] B, // 4-bit multiplier
+    output [7:0] P // 8-bit product
+);
+    wire [3:0] pp0, pp1, pp2, pp3; // Partial products
+    wire [7:0] sum1, sum2, sum3; // Intermediate sums
+    wire carry1, carry2, carry3; // Carry-out wires
+
+    // Generate partial products
+    assign pp0 = A & {4{B[0]}}; // A * B[0]
+    assign pp1 = A & {4{B[1]}}; // A * B[1]
+    assign pp2 = A & {4{B[2]}}; // A * B[2]
+    assign pp3 = A & {4{B[3]}}; // A * B[3]
+
+    // Shift partial products to their correct positions and add
+    // Step 1: pp0 + (pp1 << 1)
+    adder_4bit adder1 ({4'b0, pp0}, {3'b0, pp1, 1'b0}, sum1[7:0], carry1);
+
+    // Step 2: sum1 + (pp2 << 2)
+    adder_4bit adder2 (sum1, {2'b0, pp2, 2'b0}, sum2[7:0], carry2);
+
+    // Step 3: sum2 + (pp3 << 3)
+    adder_4bit adder3 (sum2, {1'b0, pp3, 3'b0}, P, carry3);
+endmodule
+
+// 4-bit Adder Module
+module adder_4bit(
+    input [7:0] A,
+    input [7:0] B,
+    output [7:0] Sum,
+    output CarryOut
+);
+    assign {CarryOut, Sum} = A + B;
+endmodule
+}
+===================================================================================================

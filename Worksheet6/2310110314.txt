@@ -1,0 +1,191 @@
+============================================
+Name: Suryansh Rohil
+Roll Number: 2310110314
+Mail: sr738@snu.edu.in
+============================================
+
+
+============================================
+Full Adder:
+============================================
+
+Test_Bench:
+{
+// Code your testbench here
+module full_adder_tb;
+  reg a, b , cin;
+  wire sum, carry;
+
+  full_adder_s uut(a,b,cin,sum,carry);
+
+  initial begin
+    $dumpfile("dump.vcd");
+    $dumpvars(0, full_adder_tb);
+
+    a = 0; b = 0; cin = 0; 
+    #10;
+    a = 0; b = 0; cin = 1; 
+    #10;
+    a = 0; b = 1; cin = 0; 
+    #10;
+    a = 0; b = 1; cin = 1; 
+    #10;
+    a = 1; b = 0; cin = 0; 
+    #10;
+    a = 1; b = 0; cin = 1; 
+    #10;
+    a = 1; b = 1; cin = 0; 
+    #10;
+    a = 1; b = 1; cin = 1; 
+    #10;
+    $finish();
+  end
+endmodule
+}
+
+============================================
+
+Design:
+{
+module full_adder_s(
+  input a, b, cin,
+  output sum, carry
+);
+  
+  wire w1, w2, w3;
+  
+  xor (w1, a, b);
+  xor (sum, w1, cin);
+  
+  and (w2, a, b);
+  and (w3, w1, cin);
+  or (carry, w2, w3);
+endmodule
+}
+
+============================================
+Half Adder:
+============================================
+
+Test_Bench:
+{
+// Code your testbench here
+module half_adder_tb;
+  reg a, b;
+  wire sum, carry;
+
+  half_adder_s uut (a, b, sum, carry);
+
+  initial begin
+    // Specify the VCD file name
+    $dumpfile("dump.vcd");
+    $dumpvars(0, half_adder_tb);
+
+    a = 0; b = 0;
+    #10;
+    a = 0; b = 1;
+    #10;
+    a = 1; b = 0;
+    #10;
+    a = 1; b = 1;
+    #10;
+    $finish;
+  end
+endmodule
+}
+
+============================================
+
+Design:
+
+{
+// Code your design here
+module half_adder_s (
+    input a, b,
+    output sum, carry
+);
+  xor (sum, a, b);
+  and (carry, a, b);
+endmodule
+}
+
+
+============================================
+MUX 4 to 1:
+============================================
+
+Test_Bench:
+
+{
+module mux_4_to_1_tb;
+    reg a0, a1, a2, a3;
+    reg selectline0, selectline1;
+    wire y;
+
+    
+    mux_4_to_1 uut(a0, a1, a2, a3, selectline0, selectline1, y);
+
+    initial begin
+        $dumpfile("dump.vcd");
+        $dumpvars(0, mux_4_to_1_tb);
+
+        a0 = 0; a1 = 0; a2 = 0; a3 = 0; selectline0 = 0; selectline1 = 0; 
+      	#10; // Output should be 0
+        a0 = 0; a1 = 0; a2 = 0; a3 = 1; selectline0 = 0; selectline1 = 0; 
+      	#10; // Output should be 0
+        a0 = 0; a1 = 1; a2 = 0; a3 = 0; selectline0 = 0; selectline1 = 1;
+      	#10; // Output should be 0
+        a0 = 1; a1 = 0; a2 = 0; a3 = 0; selectline0 = 1; selectline1 = 0;
+      	#10; // Output should be 1
+        a0 = 0; a1 = 0; a2 = 1; a3 = 0; selectline0 = 1; selectline1 = 1;
+      	#10; // Output should be 1
+        a0 = 0; a1 = 1; a2 = 1; a3 = 0; selectline0 = 0; selectline1 = 1;
+      	#10; // Output should be 1
+        a0 = 1; a1 = 0; a2 = 0; a3 = 1; selectline0 = 1; selectline1 = 1;
+      	#10; // Output should be 1
+        a0 = 1; a1 = 1; a2 = 1; a3 = 1; selectline0 = 0; selectline1 = 0;
+      	#10; // Output should be 1
+        
+        $finish();
+    end
+endmodule
+}
+
+
+============================================
+Design:
+
+module mux_4_to_1(
+    input a0, a1, a2, a3,
+    input selectline0, selectline1,
+    output y
+);
+    wire sel0_n, sel1_n;
+    wire y0, y1, y2, y3;
+
+    not(sel0_n, selectline0);
+    not(sel1_n, selectline1);
+
+    and(y0, a0, sel0_n, sel1_n);
+    and(y1, a1, sel0_n, selectline1);
+    and(y2, a2, selectline0, sel1_n);
+    and(y3, a3, selectline0, selectline1);
+
+    or(y, y0, y1, y2, y3);
+endmodule
+
+============================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
